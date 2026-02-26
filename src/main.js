@@ -1,11 +1,8 @@
 import "./style.css";
 import AgoraRTC from "agora-rtc-sdk-ng";
-import AgoraRTM from "agora-rtm-sdk";
 import appid from "./appid.js";
 
 const token = null;
-const rtcUid = Math.floor(Math.random() * 2032);
-const rtmUid = String(Math.floor(Math.random() * 2032));
 
 let roomId = "main";
 
@@ -17,32 +14,7 @@ let audioTracks = {
 let micMuted = true;
 
 let rtcClient;
-let rtmClient;
-// let channel; // [UBAH] RTM v2 tidak pakai channel object gaya v1
-
-// ===== RTM v2 =====
-let initRtm = async (name) => {
-  // [UBAH] RTM v2: buat client pakai class RTM
-  rtmClient = new AgoraRTM.RTM(appid, rtmUid, { token: token ?? "" });
-
-  // [UBAH] login
-  await rtmClient.login();
-
-  // [UBAH] subscribe ke "roomId" (channel messaging)
-  await rtmClient.subscribe(roomId);
-
-  rtmClient.addOrUpdateLocalUserAttributes({'key1':'value', 'key2':'value'})
-
-  // [TAMBAH] contoh publish pesan (test)
-  // await rtmClient.publish(roomId, "Hello from RTM v2", { channelType: "MESSAGE" });
-
-  window.addEventListener("beforeunload", leaveRtmChannel);
-
-  // [UBAH] RTM v2 TIDAK ADA:
-  // channel.on('MemberJoined', ...)
-  // channel.on('MemberLeft', ...)
-  // getChannelMembers() via channel.getMembers()
-};
+let localUid;
 
 // ===== RTC kamu (tetap) =====
 const initRtc = async () => {
@@ -52,8 +24,10 @@ const initRtc = async () => {
   rtcClient.on("user-published", handleUserPublished);
   rtcClient.on("user-left", handleUserLeft);
 
-  await rtcClient.join(appid, roomId, token, rtcUid);
-  audioTracks.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack();
+  localUid = await rtcClient.join(appid, roomId, token, null);
+  audioTracks.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack({
+    encoderConfig: "music_high_quality_stereo"
+  });
   audioTracks.localAudioTrack.setMuted(micMuted);
   await rtcClient.publish(audioTracks.localAudioTrack);
 
@@ -66,6 +40,13 @@ let handleUserPublished = async (user, mediaType) => {
   if (mediaType == "audio") {
     audioTracks.remoteAudioTracks[user.uid] = [user.audioTrack];
     user.audioTrack.play();
+
+    if (!document.getElementById(String(user.uid))) {
+      const html = `<div class="speaker user-rtc-${user.uid}" id="${user.uid}">
+        <p>${user.uid}</p>
+      </div>`;
+      document.getElementById("members").insertAdjacentHTML("beforeend", html);
+    }
   }
 };
 
@@ -93,11 +74,10 @@ let lobbyForm = document.getElementById("form");
 const enterRoom = async (e) => {
   e.preventDefault();
 
-  let displayName = e.target.displayName.value;
+  let displayname = e.target.displayname.value;
 
   // [UBAH] penting: await biar urut & gampang debug
   await initRtc();
-  await initRtm(displayName);
 
   lobbyForm.style.display = "none";
   document.getElementById("room-header").style.display = "flex";
@@ -109,40 +89,16 @@ const enterRoom = async (e) => {
   };
 
   // setelah join, render diri sendiri
-  addUserBox(rtcUid);
+  addUserBox(localUid);
 
-  // kalau ada user lain join
-  rtcClient.on("user-joined", (user) => addUserBox(user.uid));
-
-  // kalau ada user publish (biasanya ini yang pasti kejadian pas dia aktif audio)
-  rtcClient.on("user-published", async (user, mediaType) => {
-    addUserBox(user.uid);
-    await rtcClient.subscribe(user, mediaType);
-    if (mediaType === "audio") user.audioTrack.play();
-  });
-
-  // kalau user keluar
-  rtcClient.on("user-left", (user) => {
-    document.getElementById(String(user.uid))?.remove();
-  });
 };
 
-let leaveRtmChannel = async () => {
-  // [UBAH] RTM v2: tidak ada channel.leave()
-  try {
-    await rtmClient?.logout();
-  } catch (e) {
-    console.log(e);
-  }
-};
 
 let leaveRoom = async () => {
   audioTracks.localAudioTrack.stop();
   audioTracks.localAudioTrack.close();
   rtcClient.unpublish();
   rtcClient.leave();
-
-  await leaveRtmChannel();
 
   document.getElementById("form").style.display = "block";
   document.getElementById("room-header").style.display = "none";

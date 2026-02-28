@@ -33,7 +33,7 @@ const initRtc = async () => {
 audioTracks.localAudioTrack.setMuted(true);
 
 // WAJIB publish sekali saja
-await rtcClient.publish(audioTracks.localAudioTrack);`
+await rtcClient.publish(audioTracks.localAudioTrack);
 
   rtcClient.on("user-joined", (user) => {
     if (!document.getElementById(String(user.uid))) {
@@ -70,16 +70,18 @@ let handleUserLeft = async (user) => {
 
 // ===== UI mic kamu (tetap) =====
 const toggleMic = async (e) => {
+  console.log("MIC CLICKED", micMuted)
+
   if (micMuted){
     e.target.src = 'icons/mic.svg'
     e.target.style.backgroundColor = 'ivory'
     micMuted = false
-  }else{
+  } else {
     e.target.src = 'icons/mic-off.svg'
     e.target.style.backgroundColor = 'indianred'
-    
     micMuted = true
   }
+
   audioTracks.localAudioTrack.setMuted(micMuted)
 }
 

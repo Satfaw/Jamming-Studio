@@ -52,7 +52,7 @@ let handleUserPublished = async (user, mediaType) => {
 
   if (mediaType == "audio") {
     audioTracks.remoteAudioTracks[user.uid] = [user.audioTrack];
-    user.audioTrack.play();
+    user.audioTrack.play(document.body);
 
     if (!document.getElementById(String(user.uid))) {
       const html = `<div class="speaker user-rtc-${user.uid}" id="${user.uid}">
@@ -83,6 +83,8 @@ const toggleMic = async (e) => {
   }
 
   audioTracks.localAudioTrack.setMuted(micMuted)
+  console.log("Muted sekarang:", micMuted)
+  console.log("Track enabled:", audioTracks.localAudioTrack.enabled)
 }
 
 document.getElementById('mic-icon').addEventListener('click', toggleMic)

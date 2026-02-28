@@ -55,9 +55,9 @@ rtcClient.enableAudioVolumeIndicator();
       if(!userElement) return;
 
       if (volume.level > 5 ) {
-        userElement.style.border = "3 px solid #00ff00";
+        userElement.style.border = "3px solid #00ff00";
       }else {
-        userElement.style.border = "1 px solid #ccc";
+        userElement.style.border = "1px solid #ccc";
       }
     })
   })

@@ -26,8 +26,14 @@ const initRtc = async () => {
 
   localUid = await rtcClient.join(appid, roomId, token, null);
   audioTracks.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack({
-    encoderConfig: "music_high_quality_stereo"
-  });``
+  encoderConfig: "music_high_quality_stereo"
+});
+
+// Mic default OFF
+audioTracks.localAudioTrack.setMuted(true);
+
+// WAJIB publish sekali saja
+await rtcClient.publish(audioTracks.localAudioTrack);`
 
   rtcClient.on("user-joined", (user) => {
     if (!document.getElementById(String(user.uid))) {

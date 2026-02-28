@@ -35,6 +35,9 @@ audioTracks.localAudioTrack.setMuted(true);
 // WAJIB publish sekali saja
 await rtcClient.publish(audioTracks.localAudioTrack);
 
+//mengaktifkan volume indicator
+rtcClient.enableAudioVolumeIndicator();
+
   rtcClient.on("user-joined", (user) => {
     if (!document.getElementById(String(user.uid))) {
       const html = `
@@ -45,6 +48,19 @@ await rtcClient.publish(audioTracks.localAudioTrack);
       document.getElementById("members").insertAdjacentHTML("beforeend", html);
     }
   });
+
+  rtcClient.on("volume-indicator", (volumes) => {
+    volumes.forEach((volume) => {
+      const userElement = document.getElementById(String(volume.uid));
+      if(!userElement) return;
+
+      if (volume.level > 5 ) {
+        userElement.style.border = "3 px solid #00ff00";
+      }else {
+        userElement.style.border = "1 px solid #ccc";
+      }
+    })
+  })
 };
 
 let handleUserPublished = async (user, mediaType) => {

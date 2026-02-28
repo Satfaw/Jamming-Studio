@@ -54,10 +54,13 @@ rtcClient.enableAudioVolumeIndicator();
       const userElement = document.getElementById(String(volume.uid));
       if(!userElement) return;
 
-      if (volume.level > 5 ) {
+      if (volume.level > 5) {
         userElement.style.border = "3px solid #00ff00";
-      }else {
-        userElement.style.border = "1px solid #ccc";
+        clearTimeout(userElement._volumeTimeout);
+
+        userElement._volumeTimeout = setTimeout(() => {
+          userElement.style.border = "1px solid #ccc";
+        }, 300); // 300ms lebih cepat mati
       }
     })
   })

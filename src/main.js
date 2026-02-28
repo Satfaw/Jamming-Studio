@@ -61,6 +61,10 @@ rtcClient.enableAudioVolumeIndicator();
       }
     })
   })
+
+  rtcClient.on("volume-indicator", (volumes) => {
+  console.log("VOLUME DATA:", volumes);
+});
 };
 
 let handleUserPublished = async (user, mediaType) => {

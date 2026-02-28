@@ -27,11 +27,18 @@ const initRtc = async () => {
   localUid = await rtcClient.join(appid, roomId, token, null);
   audioTracks.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack({
     encoderConfig: "music_high_quality_stereo"
-  });
-  audioTracks.localAudioTrack.setMuted(micMuted);
-  await rtcClient.publish(audioTracks.localAudioTrack);
+  });``
 
-  //initVolumeIndicator()
+  rtcClient.on("user-joined", (user) => {
+    if (!document.getElementById(String(user.uid))) {
+      const html = `
+        <div class="speaker user-rtc-${user.uid}" id="${user.uid}">
+          <p>${user.uid}</p>
+        </div>
+      `;
+      document.getElementById("members").insertAdjacentHTML("beforeend", html);
+    }
+  });
 };
 
 let handleUserPublished = async (user, mediaType) => {
@@ -57,16 +64,21 @@ let handleUserLeft = async (user) => {
 
 // ===== UI mic kamu (tetap) =====
 const toggleMic = async (e) => {
+
   if (micMuted) {
+    // MIC DINYALAKAN
+    await rtcClient.publish(audioTracks.localAudioTrack);
     e.target.src = "icons/mic.svg";
     e.target.style.backgroundColor = "ivory";
     micMuted = false;
+
   } else {
+    // MIC DIMATIKAN
+    await rtcClient.unpublish(audioTracks.localAudioTrack);
     e.target.src = "icons/mic-off.svg";
     e.target.style.backgroundColor = "indianred";
     micMuted = true;
   }
-  audioTracks.localAudioTrack.setMuted(micMuted);
 };
 
 let lobbyForm = document.getElementById("form");

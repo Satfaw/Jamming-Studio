@@ -16,6 +16,19 @@
   },
   "dependencies": {
     "agora-rtc-sdk-ng": "^4.23.0",
-    "agora-rtm-sdk": "^2.2.3-1"
+    "agora-rtm-sdk": "^2.2.3-1",
+    "bcrypt": "^6.0.0",
+    "concurrently": "^9.2.1",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mariadb": "^3.5.1",
+
+    "scripts":{
+      "dev":"vite",
+      "server":"node src/backend/server.js",
+      "start":"concurrently \"npm run server\" \"npm run dev\""
+    }
   }
 }

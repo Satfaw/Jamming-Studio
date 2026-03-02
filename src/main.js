@@ -52,6 +52,12 @@ rtcClient.enableAudioVolumeIndicator();
     }
   });
 
+  setInterval(() => {
+    const stats = rtcClient.getRTCStats();
+    console.log("RTT:", stats.RTT, "ms");
+  }, 1000);
+
+
   rtcClient.on("volume-indicator", (volumes) => {
   console.log("VOLUME DATA:", volumes);
 
@@ -61,9 +67,9 @@ rtcClient.enableAudioVolumeIndicator();
     if (!track) return;
 
     if (volume.level > 15) {
-      track.setMuted(100);
+      track.setVolume(100);
     }else{
-      track.setMuted(5);
+      track.setVolume(5);
     }
   })
 

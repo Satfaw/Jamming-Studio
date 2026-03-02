@@ -61,9 +61,9 @@ rtcClient.enableAudioVolumeIndicator();
     if (!track) return;
 
     if (volume.level > 15) {
-      track.setMuted(false);
+      track.setMuted(100);
     }else{
-      track.setMuted(true);
+      track.setMuted(5);
     }
   })
 

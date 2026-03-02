@@ -50,46 +50,63 @@ rtcClient.enableAudioVolumeIndicator();
   });
 
   rtcClient.on("volume-indicator", (volumes) => {
-    volumes.forEach((volume) => {
-      const userElement = document.getElementById(String(volume.uid));
-      if(!userElement) return;
-
-      if (volume.level > 5) {
-        userElement.style.border = "3px solid #00ff00";
-        clearTimeout(userElement._volumeTimeout);
-
-        userElement._volumeTimeout = setTimeout(() => {
-          userElement.style.border = "1px solid #ccc";
-        }, 300); // 300ms lebih cepat mati
-      }
-    })
-  })
-
-  rtcClient.on("volume-indicator", (volumes) => {
   console.log("VOLUME DATA:", volumes);
+
+  volumes.forEach((volume) => {
+    const userElement = document.getElementById(String(volume.uid));
+    if (!userElement) return;
+
+    if (volume.level > 5) {
+      userElement.style.border = "3px solid #00ff00";
+      clearTimeout(userElement._volumeTimeout);
+
+      userElement._volumeTimeout = setTimeout(() => {
+        userElement.style.border = "1px solid #ccc";
+      }, 300);
+    }
+  });
 });
 };
 
 let handleUserPublished = async (user, mediaType) => {
-  await rtcClient.subscribe(user, mediaType);
+   try {
+    await rtcClient.subscribe(user, mediaType);
+  } catch (err){
+    console.warn("Gagal Subscribe: ", err.message);
+    return;
+  }
 
-  if (mediaType == "audio") {
-    audioTracks.remoteAudioTracks[user.uid] = [user.audioTrack];
-    user.audioTrack.play(document.body);
+  if (mediaType === "audio") {
+    audioTracks.remoteAudioTracks[user.uid] = user.audioTrack;
+    user.audioTrack.play();
 
     if (!document.getElementById(String(user.uid))) {
-      const html = `<div class="speaker user-rtc-${user.uid}" id="${user.uid}">
+      const html = `
+        <div class="speaker user-rtc-${user.uid}" id="${user.uid}">
         <p>${user.uid}</p>
-      </div>`;
+        </div>
+      `;
       document.getElementById("members").insertAdjacentHTML("beforeend", html);
     }
   }
 };
 
-let handleUserLeft = async (user) => {
+let handleUserLeft = (user) => {
+  console.log("User keluar:", user.uid);
+
   delete audioTracks.remoteAudioTracks[user.uid];
-  //document.getElementById(user.uid).remove()
+
+  const userElement = document.getElementById(String(user.uid));
+  if (userElement) {
+    userElement.remove();
+  }
+
+  const members = document.querySelectorAll(".speaker");
+  if (members.length === 1) {
+    console.log("Room kosong, hanya kamu saja");
+  }
 };
+
 
 // ===== UI mic kamu (tetap) =====
 const toggleMic = async (e) => {
@@ -140,8 +157,8 @@ const enterRoom = async (e) => {
 let leaveRoom = async () => {
   audioTracks.localAudioTrack.stop();
   audioTracks.localAudioTrack.close();
-  rtcClient.unpublish();
-  rtcClient.leave();
+  await rtcClient.unpublish();
+  await rtcClient.leave();
 
   document.getElementById("form").style.display = "block";
   document.getElementById("room-header").style.display = "none";

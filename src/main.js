@@ -26,7 +26,10 @@ const initRtc = async () => {
 
   localUid = await rtcClient.join(appid, roomId, token, null);
   audioTracks.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack({
-  encoderConfig: "music_high_quality_stereo"
+  encoderConfig: "music_high_quality_stereo",
+  AEC: false,
+  ANS: false,
+  AGC: false
 });
 
 // Mic default OFF
@@ -51,6 +54,18 @@ rtcClient.enableAudioVolumeIndicator();
 
   rtcClient.on("volume-indicator", (volumes) => {
   console.log("VOLUME DATA:", volumes);
+
+  volumes.forEach((volume) => {
+    const uid = volume.uid;
+    const track = audioTracks.remoteAudioTracks[uid];
+    if (!track) return;
+
+    if (volume.level > 15) {
+      track.setMuted(false);
+    }else{
+      track.setMuted(true);
+    }
+  })
 
   volumes.forEach((volume) => {
     const userElement = document.getElementById(String(volume.uid));

@@ -17,7 +17,33 @@ let localUid;
 let localUsername;
 // Mapping UID -> Username
 let userNames = {};
-// let activeUsers = new Set();  
+// let activeUsers = new Set();
+
+// UPDATE JUMLAH MEMBER REALTIME
+const updateMemberCount = () => {
+  const membersContainer = document.getElementById("members");
+
+  if (!membersContainer) return;
+
+  // Hitung jumlah elemen anak di dalam div members
+  const totalMembers = membersContainer.children.length;
+
+  const maxCapacity = 5; // bisa kamu sesuaikan nanti dari database
+
+  const counterElement = document.getElementById("member-count");
+  if (!counterElement) return;
+
+  if (counterElement) {
+    counterElement.innerText = `${totalMembers} / ${maxCapacity} Musisi Online`;
+  }
+
+  if (totalMembers >= maxCapacity) {
+    counterElement.style.color = "red";
+  } else {
+    counterElement.style.color = "white";
+  }
+
+};
 
 // INIT RTC 
 const initRtc = async (displayname) => {
@@ -27,6 +53,13 @@ const initRtc = async (displayname) => {
       localUid = await rtcClient.join(appid, roomId, token, displayname);
 
       localUsername = displayname;
+      const maxCapacity = 5;
+
+      if(rtcClient.remoteUsers.length >= maxCapacity - 1) {
+        alert("Room sudah penuh! Coba lagi nanti.")
+        await rtcClient.leave();
+        return false;
+      }
     } catch (error) {
       if(error.code === "UID_CONFLICT") {
         alert("Usernam sudah dipakai ganti username Anda!")
@@ -50,6 +83,7 @@ const initRtc = async (displayname) => {
         </div>
       `;
       document.getElementById("members").insertAdjacentHTML("beforeend", html);
+      updateMemberCount();
     }
   });
 
@@ -68,6 +102,8 @@ const initRtc = async (displayname) => {
 
   // Publish sekali saja
   await rtcClient.publish(audioTracks.localAudioTrack);
+
+  return true;
 
   rtcClient.enableAudioVolumeIndicator();
 
@@ -106,8 +142,16 @@ let handleUserPublished = async (user, mediaType) => {
   }
 
   if (mediaType === "audio") {
-    audioTracks.remoteAudioTracks[user.uid] = user.audioTrack;
-    user.audioTrack.play();
+
+  const remoteTrack = user.audioTrack;
+
+  if (!remoteTrack) {
+    console.warn("Remote track belum siap:", user.uid);
+    return;
+  }
+
+  audioTracks.remoteAudioTracks[user.uid] = remoteTrack;
+  remoteTrack.play();
 
     if (!document.getElementById(String(user.uid))) {
 
@@ -121,6 +165,8 @@ let handleUserPublished = async (user, mediaType) => {
       document
         .getElementById("members")
         .insertAdjacentHTML("beforeend", html);
+        
+      updateMemberCount(); //update realtime
     }
   }
 };
@@ -130,6 +176,8 @@ let handleUserLeft = (user) => {
 
   const userElement = document.getElementById(String(user.uid));
   if (userElement) userElement.remove();
+
+  updateMemberCount(); //update saat user keluar
 };
 
 
@@ -175,11 +223,15 @@ const enterRoom = async (e) => {
     return;
   }
 
-  try{
-    await initRtc(displayname);
+  let joined;
+
+  try {
+    joined = await initRtc(displayname);
   } catch {
     return;
   }
+
+  if (!joined) return;
 
   const usernameRegex = /^[a-zA-Z0-9_]+$/;
   if (!usernameRegex.test(displayname)) {
@@ -198,6 +250,7 @@ const enterRoom = async (e) => {
     </div>
   `;
   document.getElementById("members").insertAdjacentHTML("beforeend", html);
+  updateMemberCount();
 };
 
 lobbyForm.addEventListener("submit", enterRoom);
@@ -215,6 +268,7 @@ let leaveRoom = async () => {
   document.getElementById("form").style.display = "block";
   document.getElementById("room-header").style.display = "none";
   document.getElementById("members").innerHTML = "";
+  updateMemberCount(); // reset 0
 };
 
 document.getElementById("leave-icon").addEventListener("click", leaveRoom);

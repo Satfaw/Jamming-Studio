@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "server": "node src/backend/server.js",
+    "migration": "node src/backend/migrate.js",
+    "start": "concurrently \"npm run server\" \"npm run dev\""
   },
   "devDependencies": {
     "vite": "^8.0.0-beta.13"
@@ -23,12 +26,6 @@
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
     "jsonwebtoken": "^9.0.3",
-    "mariadb": "^3.5.1",
-
-    "scripts":{
-      "dev":"vite",
-      "server":"node src/backend/server.js",
-      "start":"concurrently \"npm run server\" \"npm run dev\""
-    }
+    "mariadb": "^3.5.1"
   }
 }

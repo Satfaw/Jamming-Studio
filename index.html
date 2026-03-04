@@ -12,25 +12,114 @@
 
   <div id="container">
 
-    <div id="room-header">
+    <!-- Step 1: Browse Sessions -->
+    <div id="step-browse" class="step-view active">
+      <div class="lobby-intro">
+        <div class="logo-icon">🎵</div>
+        <h1 class="lobby-title">Jamming Studio</h1>
+        <p class="lobby-subtitle">Connect, collaborate, and create music together</p>
+      </div>
 
-      <h1 id="room-name"></h1>
-
-      <div id="room-header-controls">
-        <img id="mic-icon" class="control-icon" src="icons/mic-off.svg" />
-        <img id="leave-icon" class="control-icon" src="icons/leave.svg" />
+      <div class="sessions-grid">
+        <h2>Available Sessions</h2>
+        <div id="sessions-grid-items" class="sessions-grid-items">
+          <div class="session-card" data-room="main">
+            <div class="session-icon">🎸</div>
+            <h3>Jazz Improv Session</h3>
+            <p class="session-info">5 musicians • Active</p>
+            <button class="btn-join-session">Join Session</button>
+          </div>
+          <div class="session-card" data-room="piano">
+            <div class="session-icon">🎹</div>
+            <h3>Piano Practice</h3>
+            <p class="session-info">2 musicians • Available</p>
+            <button class="btn-join-session">Join Session</button>
+          </div>
+          <div class="session-card" data-room="vocal">
+            <div class="session-icon">🎤</div>
+            <h3>Vocal Session</h3>
+            <p class="session-info">3 musicians • Waiting</p>
+            <button class="btn-join-session">Join Session</button>
+          </div>
+          <div class="session-card" data-room="drums">
+            <div class="session-icon">🥁</div>
+            <h3>Drum Circle</h3>
+            <p class="session-info">4 musicians • Live</p>
+            <button class="btn-join-session">Join Session</button>
+          </div>
+        </div>
       </div>
     </div>
 
-    <form id="form">
-      <input required name="displayname" type="text" placeholder="Enter display name..."/>
-      <input type="submit" value="Enter Room" />
+    <!-- Step 2: Username Form (akan muncul setelah pilih sesion) -->
+    <form id="form" class="username-form" style="display: none;">
+      <h2></h2>
+      <div class="form-group">
+        <label for="displayname">Your Name</label>
+        <input 
+          required 
+          id="displayname"
+          name="displayname" 
+          type="text" 
+          placeholder="Enter your name..."
+          autocomplete="off"
+        />
+      </div>
+      <button type="submit" class="btn-start-jamming">Start Jamming</button>
+      <p class="form-footer-text">Step 2 of 3</p>
     </form>
 
-    <div id="members">
+    <!-- Step 3: Session Room / Members View -->
+    <div id="session-browser" class="session-browser" style="display: none;">
+      <div id="room-header">
+        <h1 id="room-name"></h1>
+        <div id="room-header-controls">
+          <img id="mic-icon" class="control-icon" src="icons/mic-off.svg" title="Toggle Mic" />
+          <img id="leave-icon" class="control-icon" src="icons/leave.svg" title="Leave" />
+        </div>
+      </div>
 
+      <div id="members" class="members-area">
+      </div>
     </div>
+
   </div>
+
+  <script>
+    // Handle session selection flow
+    document.querySelectorAll('.btn-join-session').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const card = btn.closest('.session-card');
+        const roomName = card.querySelector('h3').textContent;
+        
+        // Hide browse step, show form step
+        document.getElementById('step-browse').classList.remove('active');
+        const form = document.getElementById('form');
+        form.style.display = 'block';
+        form.querySelector('h2').textContent = roomName;
+        
+        // Focus on input
+        form.querySelector('input[name="displayname"]').focus();
+      });
+    });
+
+    // Monitor form display to show session browser when form is hidden by main.js
+    const observeForm = new MutationObserver(() => {
+      const form = document.getElementById('form');
+      const browser = document.getElementById('session-browser');
+      
+      // When form is hidden, show the session browser
+      if (form.style.display === 'none') {
+        browser.style.display = 'flex';
+      }
+    });
+
+    observeForm.observe(document.getElementById('form'), {
+      attributes: true,
+      attributeFilter: ['style']
+    });
+  </script>
 
   <script type="module" src="/src/main.js"></script>
 </body>

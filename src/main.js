@@ -15,16 +15,28 @@ let micMuted = true;
 let rtcClient;
 let localUid;
 let localUsername;
+// Mapping UID -> Username
+let userNames = {};
+// let activeUsers = new Set();  
 
 // INIT RTC 
 const initRtc = async (displayname) => {
+  try{
+      rtcClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
 
-  rtcClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+      localUid = await rtcClient.join(appid, roomId, token, displayname);
 
-  const uid = String(Date.now());
-  localUid = await rtcClient.join(appid, roomId, token, uid);
-
-  localUsername = displayname;
+      localUsername = displayname;
+    } catch (error) {
+      if(error.code === "UID_CONFLICT") {
+        alert("Usernam sudah dipakai ganti username Anda!")
+      } else {
+        alert("Gagal masuk room:" + error.message)
+      }
+      throw error;
+    }
+    
+  userNames[localUsername] = displayname;
 
   // semua event dipindah ke dalam initRtc
   rtcClient.on("user-published", handleUserPublished);
@@ -98,12 +110,17 @@ let handleUserPublished = async (user, mediaType) => {
     user.audioTrack.play();
 
     if (!document.getElementById(String(user.uid))) {
+
+      const username = user.uid;
+
       const html = `
         <div class="speaker user-rtc-${user.uid}" id="${user.uid}">
-          <p>${user.uid}</p>
+          <p>${username}</p>
         </div>
       `;
-      document.getElementById("members").insertAdjacentHTML("beforeend", html);
+      document
+        .getElementById("members")
+        .insertAdjacentHTML("beforeend", html);
     }
   }
 };
@@ -158,13 +175,19 @@ const enterRoom = async (e) => {
     return;
   }
 
+  try{
+    await initRtc(displayname);
+  } catch {
+    return;
+  }
+
   const usernameRegex = /^[a-zA-Z0-9_]+$/;
   if (!usernameRegex.test(displayname)) {
     alert("Username hanya boleh huruf, angka, dan underscore(_)");
     return;
   }
 
-  await initRtc(displayname);
+  
 
   lobbyForm.style.display = "none";
   document.getElementById("room-header").style.display = "flex";

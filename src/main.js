@@ -3,7 +3,6 @@ import AgoraRTC from "agora-rtc-sdk-ng";
 import appid from "./appid.js";
 
 const token = null;
-
 let roomId = "main";
 
 let audioTracks = {
@@ -15,28 +14,33 @@ let micMuted = true;
 
 let rtcClient;
 let localUid;
+let localUsername;
+// Mapping UID -> Username
+let userNames = {};
+// let activeUsers = new Set();  
 
-// ===== RTC kamu (tetap) =====
-const initRtc = async () => {
-  rtcClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
+// INIT RTC 
+const initRtc = async (displayname) => {
+  try{
+      rtcClient = AgoraRTC.createClient({ mode: "rtc", codec: "vp8" });
 
-  //rtcClient.on('user-joined', handleUserJoined)
+      localUid = await rtcClient.join(appid, roomId, token, displayname);
+
+      localUsername = displayname;
+    } catch (error) {
+      if(error.code === "UID_CONFLICT") {
+        alert("Usernam sudah dipakai ganti username Anda!")
+      } else {
+        alert("Gagal masuk room:" + error.message)
+      }
+      throw error;
+    }
+    
+  userNames[localUsername] = displayname;
+
+  // semua event dipindah ke dalam initRtc
   rtcClient.on("user-published", handleUserPublished);
   rtcClient.on("user-left", handleUserLeft);
-
-  localUid = await rtcClient.join(appid, roomId, token, null);
-  audioTracks.localAudioTrack = await AgoraRTC.createMicrophoneAudioTrack({
-  encoderConfig: "music_high_quality_stereo"
-});
-
-// Mic default OFF
-audioTracks.localAudioTrack.setMuted(true);
-
-// WAJIB publish sekali saja
-await rtcClient.publish(audioTracks.localAudioTrack);
-
-//mengaktifkan volume indicator
-rtcClient.enableAudioVolumeIndicator();
 
   rtcClient.on("user-joined", (user) => {
     if (!document.getElementById(String(user.uid))) {
@@ -49,10 +53,29 @@ rtcClient.enableAudioVolumeIndicator();
     }
   });
 
+
+  // BUAT MICROPHONE TRACK
+  audioTracks.localAudioTrack =
+    await AgoraRTC.createMicrophoneAudioTrack({
+      encoderConfig: "music_high_quality_stereo",
+      AEC: false,
+      ANS: false,
+      AGC: false
+    });
+
+  // Mic default OFF
+  audioTracks.localAudioTrack.setMuted(true);
+
+  // Publish sekali saja
+  await rtcClient.publish(audioTracks.localAudioTrack);
+
+  rtcClient.enableAudioVolumeIndicator();
+
+  
   rtcClient.on("volume-indicator", (volumes) => {
     volumes.forEach((volume) => {
       const userElement = document.getElementById(String(volume.uid));
-      if(!userElement) return;
+      if (!userElement) return;
 
       if (volume.level > 5) {
         userElement.style.border = "3px solid #00ff00";
@@ -60,94 +83,138 @@ rtcClient.enableAudioVolumeIndicator();
 
         userElement._volumeTimeout = setTimeout(() => {
           userElement.style.border = "1px solid #ccc";
-        }, 300); // 300ms lebih cepat mati
+        }, 300);
       }
-    })
-  })
+    });
+  });
 
-  rtcClient.on("volume-indicator", (volumes) => {
-  console.log("VOLUME DATA:", volumes);
-});
+  // RTT Monitoring
+  setInterval(() => {
+    const stats = rtcClient.getRTCStats();
+    console.log("RTT:", stats.RTT, "ms");
+  }, 1000);
 };
 
-let handleUserPublished = async (user, mediaType) => {
-  await rtcClient.subscribe(user, mediaType);
 
-  if (mediaType == "audio") {
-    audioTracks.remoteAudioTracks[user.uid] = [user.audioTrack];
-    user.audioTrack.play(document.body);
+// HANDLE REMOTE USER
+let handleUserPublished = async (user, mediaType) => {
+  try {
+    await rtcClient.subscribe(user, mediaType);
+  } catch (err) {
+    console.warn("Gagal Subscribe:", err.message);
+    return;
+  }
+
+  if (mediaType === "audio") {
+    audioTracks.remoteAudioTracks[user.uid] = user.audioTrack;
+    user.audioTrack.play();
 
     if (!document.getElementById(String(user.uid))) {
-      const html = `<div class="speaker user-rtc-${user.uid}" id="${user.uid}">
-        <p>${user.uid}</p>
-      </div>`;
-      document.getElementById("members").insertAdjacentHTML("beforeend", html);
+
+      const username = user.uid;
+
+      const html = `
+        <div class="speaker user-rtc-${user.uid}" id="${user.uid}">
+          <p>${username}</p>
+        </div>
+      `;
+      document
+        .getElementById("members")
+        .insertAdjacentHTML("beforeend", html);
     }
   }
 };
 
-let handleUserLeft = async (user) => {
+let handleUserLeft = (user) => {
   delete audioTracks.remoteAudioTracks[user.uid];
-  //document.getElementById(user.uid).remove()
+
+  const userElement = document.getElementById(String(user.uid));
+  if (userElement) userElement.remove();
 };
 
-// ===== UI mic kamu (tetap) =====
-const toggleMic = async (e) => {
-  console.log("MIC CLICKED", micMuted)
 
-  if (micMuted){
-    e.target.src = 'icons/mic.svg'
-    e.target.style.backgroundColor = 'ivory'
-    micMuted = false
-  } else {
-    e.target.src = 'icons/mic-off.svg'
-    e.target.style.backgroundColor = 'indianred'
-    micMuted = true
+// TOGGLE MIC (AMAN)
+const toggleMic = async (e) => {
+
+  if (!audioTracks.localAudioTrack) {
+    console.warn("Track belum siap!");
+    return;
   }
 
-  audioTracks.localAudioTrack.setMuted(micMuted)
-  console.log("Muted sekarang:", micMuted)
-  console.log("Track enabled:", audioTracks.localAudioTrack.enabled)
-}
+  micMuted = !micMuted;
 
-document.getElementById('mic-icon').addEventListener('click', toggleMic)
+  if (!micMuted) {
+    e.target.src = "icons/mic.svg";
+    e.target.style.backgroundColor = "ivory";
+  } else {
+    e.target.src = "icons/mic-off.svg";
+    e.target.style.backgroundColor = "indianred";
+  }
 
+  audioTracks.localAudioTrack.setMuted(micMuted);
+};
+
+document.getElementById("mic-icon").addEventListener("click", toggleMic);
+
+
+// MASUK KE ROOM
 let lobbyForm = document.getElementById("form");
 
 const enterRoom = async (e) => {
   e.preventDefault();
 
-  let displayname = e.target.displayname.value;
+  let displayname = e.target.displayname.value.trim();
 
-  // [UBAH] penting: await biar urut & gampang debug
-  await initRtc();
+  if (displayname === "") {
+    alert("Username Tidak Boleh Kosong!");
+    return;
+  }
+
+  if (displayname.length < 3) {
+    alert("Username Minimal 3 Huruf!");
+    return;
+  }
+
+  try{
+    await initRtc(displayname);
+  } catch {
+    return;
+  }
+
+  const usernameRegex = /^[a-zA-Z0-9_]+$/;
+  if (!usernameRegex.test(displayname)) {
+    alert("Username hanya boleh huruf, angka, dan underscore(_)");
+    return;
+  }
+
+  
 
   lobbyForm.style.display = "none";
   document.getElementById("room-header").style.display = "flex";
 
-  const addUserBox = (uid) => {
-    if (document.getElementById(String(uid))) return; // anti dobel
-    const html = `<div class="speaker user-rtc-${uid}" id="${uid}"><p>${uid}</p></div>`;
-    document.getElementById("members").insertAdjacentHTML("beforeend", html);
-  };
-
-  // setelah join, render diri sendiri
-  addUserBox(localUid);
-
+  const html = `
+    <div class="speaker user-rtc-${localUid}" id="${localUid}">
+      <p>${localUsername}</p>
+    </div>
+  `;
+  document.getElementById("members").insertAdjacentHTML("beforeend", html);
 };
 
+lobbyForm.addEventListener("submit", enterRoom);
 
+
+// KELUAR DARI ROOM
 let leaveRoom = async () => {
-  audioTracks.localAudioTrack.stop();
-  audioTracks.localAudioTrack.close();
-  rtcClient.unpublish();
-  rtcClient.leave();
+  if (audioTracks.localAudioTrack) {
+    audioTracks.localAudioTrack.stop();
+    audioTracks.localAudioTrack.close();
+  }
+
+  await rtcClient.leave();
 
   document.getElementById("form").style.display = "block";
   document.getElementById("room-header").style.display = "none";
   document.getElementById("members").innerHTML = "";
 };
 
-lobbyForm.addEventListener("submit", enterRoom);
 document.getElementById("leave-icon").addEventListener("click", leaveRoom);
-document.getElementById("mic-icon").addEventListener("click", toggleMic);

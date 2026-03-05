@@ -91,7 +91,7 @@ const initRtc = async (displayname) => {
   // BUAT MICROPHONE TRACK
   audioTracks.localAudioTrack =
     await AgoraRTC.createMicrophoneAudioTrack({
-      encoderConfig: "music_high_quality_stereo",
+      encoderConfig: "music_standart",
       AEC: false,
       ANS: false,
       AGC: false
@@ -102,8 +102,6 @@ const initRtc = async (displayname) => {
 
   // Publish sekali saja
   await rtcClient.publish(audioTracks.localAudioTrack);
-
-  return true;
 
   rtcClient.enableAudioVolumeIndicator();
 
@@ -129,6 +127,8 @@ const initRtc = async (displayname) => {
     const stats = rtcClient.getRTCStats();
     console.log("RTT:", stats.RTT, "ms");
   }, 1000);
+
+    return true;  
 };
 
 

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>You've Got A Jam — Web Audio Landing</title>
+  <link rel="stylesheet" href="landing.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" />
+</head>
+<body>
+  <header class="window-header">
+    <div class="window-title">You've Got A Jam</div>
+    <div class="window-menu">
+      <button class="menu-btn">Features</button>
+      <button class="menu-btn">Sessions</button>
+      <button class="menu-btn">Community</button>
+      <button class="menu-btn">Help</button>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="hero">
+      <div class="hero-window">
+        <div class="hero-window-bar">
+          <div class="hero-window-icon">🎵</div>
+          <span class="hero-window-name">JamSession.exe</span>
+          <div class="hero-window-controls">
+            <button class="ctrl">_</button>
+            <button class="ctrl">🗖</button>
+            <button class="ctrl">✕</button>
+          </div>
+        </div>
+
+        <div class="hero-window-body">
+
+          <div class="hero-window-right">
+            <h1 class="hero-title">You've Got A Jam</h1>
+            <p class="hero-subtitle">
+              Connect with musicians worldwide in real-time jamming sessions. It's like MSN Messenger, but for music!
+            </p>
+
+            <div class="hero-action-row">
+              <button class="btn btn-primary" data-action="start">Start Jamming Now</button>
+            </div>
+
+            <div class="hero-footnote">Ready to Jam?!</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-header">
+          <h2>System Features</h2>
+          <p>Check out what makes our platform totally rad.</p>
+        </div>
+        <div class="grid grid-3">
+          <article class="card">
+            <h3>Real-Time Online Jamming</h3>
+            <p>
+              Connect instantly with musicians worldwide. No lag, no delays — just pure musical magic happening in real-time.
+            </p>
+          </article>
+
+          <article class="card">
+            <h3>Create or Join Sessions</h3>
+            <p>
+              Start your own jam room or browse existing sessions. Like entering a chat room — but way cooler.
+            </p>
+          </article>
+
+          <article class="card">
+            <h3>Ultra-Low Latency Audio</h3>
+            <p>
+              Our engine ensures crystal-clear sound with minimal delay — faster than your dial-up connection.
+            </p>
+          </article>
+
+          <article class="card">
+            <h3>Full Instrument Support</h3>
+            <p>
+              Guitar, bass, drums, keyboards, vocals — bring any instrument to the jam. We support more gear than a music store.
+            </p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-alt" id="benefits">
+      <div class="container">
+        <div class="section-header">
+          <h2>The Future of Music is Retro</h2>
+          <p>Experience the charm of early internet culture with cutting-edge audio technology.</p>
+        </div>
+
+        <div class="grid grid-3">
+          <div class="feature">
+            <h3>🎵 Nostalgic Vibes, Modern Tech</h3>
+            <p>Feel the Y2K energy with a slick interface and modern audio engine under the hood.</p>
+          </div>
+          <div class="feature">
+            <h3>🌍 Global Music Community</h3>
+            <p>Connect with musicians from around the world in retro-styled virtual jam rooms.</p>
+          </div>
+          <div class="feature">
+            <h3>⚡ Zero Download Required</h3>
+            <p>Jump straight into jamming — no installation needed, just like the good old web apps.</p>
+          </div>
+        </div>
+
+        <div class="benefit-media">
+          <div class="benefit-media-placeholder" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="section section-alt" id="faq">
+      <div class="container">
+        <div class="section-header">
+          <h2>Frequently Asked Questions</h2>
+        </div>
+
+        <div class="accordion" role="tablist">
+          <button class="accordion-toggle" aria-expanded="false">
+            <span>How does real-time jamming work?</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-panel">
+            <p>
+              Our platform uses low-latency audio networking to sync your instruments in real-time.
+              Plug in your guitar, bass, or mic, and start jamming with musicians worldwide.
+            </p>
+          </div>
+
+          <button class="accordion-toggle" aria-expanded="false">
+            <span>What instruments are supported?</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-panel">
+            <p>Guitar, bass, drums, keyboards, vocals, MIDI controllers, and more. If it can output audio, you can jam with it.</p>
+          </div>
+
+          <button class="accordion-toggle" aria-expanded="false">
+            <span>Do I need special equipment?</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-panel">
+            <p>
+              Just a computer with a microphone (or audio interface) and an internet connection.
+              The platform works with most modern browsers.
+            </p>
+          </div>
+
+          <button class="accordion-toggle" aria-expanded="false">
+            <span>Is it free to use?</span>
+            <span class="accordion-icon">+</span>
+          </button>
+          <div class="accordion-panel">
+            <p>
+              Yes — you can start jamming right away. Premium features may be added later, but the core experience stays free.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section cta" id="cta">
+      <div class="container cta-inner">
+        <div class="cta-copy">
+          <h2>Start Your First Jam Session</h2>
+          <p>Join thousands of musicians already jamming online. No downloads, no setup — just plug in and play!</p>
+          <div class="cta-buttons">
+            <a class="btn btn-primary" href="#" data-action="start">START JAMMING NOW</a>
+            <span class="cta-meta">Free Forever • No Credit Card • Instant Access</span>
+          </div>
+        </div>
+        <div class="cta-media">
+          <img
+            src="https://cdn.ailandingpage.ai/landingpage_io/user-generate/96996fb6-2459-4983-8fd7-1b372ccb8402/96996fb6-2459-4983-8fd7-1b372ccb8402/cta/cta-main-976bddb7300f429883bc5697bb54b68d.png"
+            alt="Online jamming illustration"
+          />
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-col">
+        <h3>You've Got A Jam</h3>
+        <p>Bringing back the golden age of online music collaboration with Y2K style.</p>
+      </div>
+
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <ul>
+          <li><a href="#">Join Session</a></li>
+          <li><a href="#">Create Room</a></li>
+          <li><a href="#">Browse Jams</a></li>
+          <li><a href="#">My Profile</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Community</h4>
+        <ul>
+          <li><a href="#">Forums</a></li>
+          <li><a href="#">Discord</a></li>
+          <li><a href="#">Tutorials</a></li>
+          <li><a href="#">Blog</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">Help Center</a></li>
+          <li><a href="#">Contact Us</a></li>
+          <li><a href="#">Privacy Policy</a></li>
+          <li><a href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 You've Got A Jam. Bringing back the Y2K music scene.</span>
+      <span>Status: Connected</span>
+    </div>
+  </footer>
+
+  <script src="landing.js"></script>
+</body>
+</html>

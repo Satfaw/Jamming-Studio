@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - WebCore</title>
+  <link rel="stylesheet" href="login/login.css" />
+</head>
+
+<body>
+  <div class="login-shell">
+    <header class="login-titlebar">
+      <div class="title-left">
+        <span class="title-icon">♪</span>
+        <span>Jamming Studio</span>
+      </div>
+      <div class="title-buttons" aria-hidden="true">
+        <button type="button" aria-label="Minimize"></button>
+        <button type="button" aria-label="Restore"></button>
+        <button type="button" aria-label="Close"></button>
+      </div>
+    </header>
+
+    <section class="login-window">
+      <div class="window-toolbar">
+        <span>LOGON</span>
+      </div>
+
+      <form id="login-form" class="login-form">
+        <div class="field-row">
+          <label for="user">Username</label>
+          <input id="user" name="user" type="text" placeholder="Masukkan username" autocomplete="username" required />
+        </div>
+
+        <div class="field-row">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="Masukkan password" autocomplete="current-password" required />
+        </div>
+
+        <button class="login-button" type="submit">Login</button>
+      </form>
+
+      <div class="login-note">Klik tombol login untuk melanjutkan ke <strong>index.html</strong>.</div>
+    </section>
+  </div>
+
+  <script>
+    document.getElementById('login-form').addEventListener('submit', function (event) {
+      event.preventDefault();
+      window.location.href = 'index.html';
+    });
+  </script>
+</body>
+
+</html>

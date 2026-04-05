@@ -28,18 +28,6 @@ body {
   color: var(--text-dark);
   font-family: "Tahoma", "MS Sans Serif", "Segoe UI", sans-serif;
   background-color: #78a8ff;
-  background-image:
-    radial-gradient(80px 32px at 12% 18%, rgba(255, 255, 255, 0.9) 0 72%, transparent 73%),
-    radial-gradient(72px 30px at 28% 11%, rgba(255, 255, 255, 0.86) 0 68%, transparent 69%),
-    radial-gradient(90px 34px at 52% 19%, rgba(255, 255, 255, 0.88) 0 70%, transparent 71%),
-    radial-gradient(84px 33px at 74% 13%, rgba(255, 255, 255, 0.9) 0 68%, transparent 69%),
-    radial-gradient(96px 34px at 90% 20%, rgba(255, 255, 255, 0.86) 0 72%, transparent 73%),
-    linear-gradient(180deg, #2f6bde 0 44%, #7ea5ea 44% 64%, transparent 64%),
-    radial-gradient(180% 85% at 50% 112%, #83c61c 0 42%, #4f9622 43% 60%, #2f6f16 61% 74%, transparent 75%);
-  background-size: 280px 140px, 300px 140px, 320px 150px, 300px 140px, 320px 150px, 100% 100%, 100% 100%;
-  background-repeat: no-repeat;
-  background-position: 0 0, 0 0, 0 0, 0 0, 0 0, center, center;
-  image-rendering: pixelated;
 }
 
 .window-shell {

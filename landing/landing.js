@@ -52,9 +52,11 @@ scrollLinks.forEach((link) => {
   });
 });
 
-// Example CTA interaction (placeholder behavior)
-const ctaButton = document.querySelector('[data-action="start"]');
-ctaButton?.addEventListener('click', (event) => {
-  event.preventDefault();
-  window.alert('Ready to jam! This is a placeholder — connect the real jam backend here.');
+// Example CTA interaction for start buttons
+const startButtons = Array.from(document.querySelectorAll('[data-action="start"]'));
+startButtons.forEach((button) => {
+  button.addEventListener('click', (event) => {
+    event.preventDefault();
+    window.location.href = 'login.html';
+  });
 });

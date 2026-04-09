@@ -261,9 +261,10 @@ a {
 
 .hero-window-body {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1.4rem;
   padding: 1.3rem 1.4rem 1.5rem;
+  justify-items: center;
 }
 
 .hero-window-left {
@@ -284,6 +285,9 @@ a {
   display: grid;
   gap: 1.1rem;
   place-items: center;
+  justify-self: center;
+  width: 100%;
+  max-width: 640px;
   text-align: center;
 }
 

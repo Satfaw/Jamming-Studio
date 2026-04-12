@@ -36,7 +36,7 @@ body {
     linear-gradient(180deg, #1b2d63 0%, #0a0d18 60%, #05050d 100%);
 }
 
-.login-page {
+.register-page {
   position: relative;
   min-height: 100vh;
   overflow: hidden;
@@ -76,7 +76,7 @@ body {
   background: radial-gradient(circle, rgba(255, 92, 138, 0.22), transparent 68%);
 }
 
-.login-shell {
+.register-shell {
   position: relative;
   z-index: 1;
   min-height: 100vh;
@@ -89,7 +89,7 @@ body {
   align-items: center;
 }
 
-.login-intro {
+.register-intro {
   max-width: 620px;
 }
 
@@ -103,7 +103,7 @@ body {
   text-shadow: 0 0 14px rgba(92, 236, 255, 0.45);
 }
 
-.login-intro h1 {
+.register-intro h1 {
   margin: 0;
   font-family: var(--font-display);
   font-size: clamp(2rem, 5vw, 4.4rem);
@@ -140,7 +140,7 @@ body {
   box-shadow: inset 0 0 0 1px rgba(92, 236, 255, 0.08);
 }
 
-.login-panel {
+.register-panel {
   border-radius: var(--radius);
   border: 1px solid var(--border);
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03));
@@ -149,7 +149,7 @@ body {
   overflow: hidden;
 }
 
-.login-titlebar {
+.register-titlebar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -198,7 +198,7 @@ body {
   opacity: 0.9;
 }
 
-.login-window {
+.register-window {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 22%),
     var(--panel);
@@ -237,7 +237,7 @@ body {
   box-shadow: 0 0 12px rgba(92, 236, 255, 0.85);
 }
 
-.login-form {
+.register-form {
   display: grid;
   gap: 18px;
 }
@@ -276,7 +276,7 @@ input:focus {
   box-shadow: 0 0 0 4px rgba(92, 236, 255, 0.12);
 }
 
-.login-button {
+.register-button {
   width: 100%;
   margin-top: 6px;
   padding: 14px 18px;
@@ -293,17 +293,17 @@ input:focus {
   transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
 }
 
-.login-button:hover {
+.register-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 18px 34px rgba(92, 236, 255, 0.28);
   filter: saturate(1.08);
 }
 
-.login-button:active {
+.register-button:active {
   transform: translateY(1px);
 }
 
-.login-note {
+.register-note {
   margin-top: 16px;
   font-size: 0.82rem;
   color: var(--muted);
@@ -324,30 +324,30 @@ input:focus {
 }
 
 @media (max-width: 860px) {
-  .login-shell {
+  .register-shell {
     grid-template-columns: 1fr;
     padding: 28px 18px 36px;
   }
 
-  .login-intro {
+  .register-intro {
     max-width: none;
   }
 }
 
 @media (max-width: 520px) {
-  .login-shell {
+  .register-shell {
     gap: 24px;
   }
 
-  .login-window {
+  .register-window {
     padding: 16px;
   }
 
-  .login-titlebar {
+  .register-titlebar {
     padding: 12px 14px;
   }
 
-  .login-intro h1 {
+  .register-intro h1 {
     font-size: 1.8rem;
   }
 

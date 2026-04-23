@@ -1,0 +1,59 @@
+@media (max-width: 900px) {
+  body {
+    padding: 10px;
+  }
+
+  /* Window */
+  .window-menubar {
+    gap: 8px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  /* Buttons */
+  .menu-btn {
+    min-width: 140px;
+    font-size: 11px;
+    padding: 10px 14px;
+  }
+
+  .btn-join-session,
+  .btn-start-jamming {
+    font-size: 11px;
+  }
+
+  /* Lobby */
+  .sessions-grid-items {
+    display: block;
+  }
+
+  .lobby-title {
+    font-size: 20px;
+  }
+
+  .lobby-subtitle,
+  .session-info {
+    font-size: 12px;
+  }
+
+  /* Form */
+  .form-group label {
+    font-size: 11px;
+  }
+
+  /* Room */
+  #room-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .speaker p {
+    font-size: 11px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+  }
+}

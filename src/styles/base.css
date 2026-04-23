@@ -1,0 +1,51 @@
+:root {
+  --desktop-bg: #07091a;
+  --win-bg: rgba(28, 46, 105, 0.62);
+  --panel-bg: rgba(30, 50, 110, 0.72);
+  --panel-bg-soft: rgba(255, 255, 255, 0.06);
+  --win-border-dark: rgba(4, 8, 24, 0.95);
+  --win-border-mid: rgba(96, 218, 255, 0.34);
+  --win-border-light: rgba(255, 255, 255, 0.2);
+  --win-border-white: rgba(199, 243, 255, 0.82);
+  --title-blue-start: #16254f;
+  --title-blue-end: #2a4fb5;
+  --text-dark: #e7e7ff;
+  --text-muted: rgba(222, 232, 255, 0.75);
+  --accent-cyan: #5cecff;
+  --accent-red: #ff5c5c;
+  --accent-yellow: #fff55c;
+  --shadow-lg: 0 24px 70px rgba(0, 0, 0, 0.45);
+  --glow-cyan: 0 0 22px rgba(92, 236, 255, 0.35);
+  --glow-red: 0 0 22px rgba(255, 92, 92, 0.35);
+  --font: "Press Start 2P", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --grid-color: rgba(100, 220, 255, 0.06);
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  color: var(--text-dark);
+  font-family: var(--font);
+  background-color: var(--desktop-bg);
+  background-image:
+    radial-gradient(circle at 16% 18%, rgba(255, 92, 92, 0.18), transparent 22%),
+    radial-gradient(circle at 85% 20%, rgba(92, 236, 255, 0.14), transparent 24%),
+    radial-gradient(circle at 50% 50%, rgba(40, 80, 180, 0.28), transparent 40%),
+    linear-gradient(180deg, #1c2b5d 0%, #142050 45%, #07091a 100%);
+  background-attachment: fixed;
+  line-height: 1.5;
+  overflow-x: hidden;
+}

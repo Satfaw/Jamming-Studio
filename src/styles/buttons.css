@@ -1,0 +1,92 @@
+/* Menu navigation buttons (inside menubar) */
+.menu-btn {
+  min-width: 164px;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 8px;
+  padding: 11px 18px;
+  color: #e7f4ff;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.92), rgba(92, 236, 255, 0.82));
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 8px 20px rgba(37, 99, 235, 0.28),
+    3px 3px 0 rgba(0, 0, 0, 0.28);
+  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+.menu-btn:hover {
+  filter: brightness(1.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 12px 28px rgba(37, 99, 235, 0.38),
+    4px 4px 0 rgba(0, 0, 0, 0.24);
+  transform: translateY(-2px);
+}
+
+.menu-btn:active {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    1px 1px 0 rgba(0, 0, 0, 0.32);
+  filter: brightness(0.95);
+}
+
+.menu-btn.is-disabled,
+.menu-btn:disabled {
+  color: rgba(212, 240, 255, 0.35);
+  border-color: rgba(120, 145, 190, 0.2);
+  background: linear-gradient(180deg, rgba(60, 70, 100, 0.55) 0%, rgba(38, 46, 70, 0.6) 100%);
+  cursor: not-allowed;
+  filter: none;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+/* Action buttons (join session / start jamming) */
+.btn-join-session,
+.btn-start-jamming {
+  margin-top: auto;
+  width: 100%;
+  padding: 14px 18px;
+  border: 1px solid rgba(92, 236, 255, 0.35);
+  border-radius: 8px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.95), rgba(92, 236, 255, 0.88));
+  color: #e7f4ff;
+  font-family: var(--font);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 10px 22px rgba(37, 99, 235, 0.32),
+    3px 3px 0 rgba(0, 0, 0, 0.3);
+  transition: transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.btn-join-session:hover,
+.btn-start-jamming:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.28),
+    0 16px 30px rgba(37, 99, 235, 0.42),
+    4px 4px 0 rgba(0, 0, 0, 0.24);
+}
+
+.btn-join-session:active,
+.btn-start-jamming:active {
+  transform: translateY(1px);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    1px 1px 0 rgba(0, 0, 0, 0.35);
+  filter: brightness(0.96);
+}

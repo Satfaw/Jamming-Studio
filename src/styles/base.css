@@ -32,6 +32,46 @@ body {
   min-height: 100%;
 }
 
+/* Decorative background layer */
+.app-background {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+}
+
+.orb-left {
+  width: 420px;
+  height: 420px;
+  top: -80px;
+  left: -100px;
+  background: rgba(255, 92, 92, 0.18);
+}
+
+.orb-right {
+  width: 520px;
+  height: 520px;
+  top: -60px;
+  right: -140px;
+  background: rgba(92, 236, 255, 0.14);
+}
+
+.grid-overlay {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(92, 236, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(92, 236, 255, 0.025) 1px, transparent 1px);
+  background-size: 44px 44px;
+}
+
 body {
   display: flex;
   align-items: center;

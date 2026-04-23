@@ -21,15 +21,11 @@
 
 #room-header h1 {
   margin: 0;
-  font-size: clamp(14px, 2.5vw, 22px);
-  padding: 10px 16px;
-  color: #fff;
-  background: linear-gradient(135deg, rgba(22, 37, 79, 0.98), rgba(40, 66, 160, 0.95));
-  border-radius: 8px;
+  font-size: clamp(12px, 2vw, 18px);
+  color: rgba(255, 255, 255, 0.92);
   text-transform: uppercase;
-  letter-spacing: 0.12em;
-  border: 1px solid rgba(92, 236, 255, 0.15);
-  text-shadow: 0 0 12px rgba(92, 236, 255, 0.35);
+  letter-spacing: 0.14em;
+  text-shadow: 0 0 14px rgba(92, 236, 255, 0.4);
 }
 
 #room-header-controls {

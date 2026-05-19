@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register - WebCore</title>
+  <link rel="stylesheet" href="register/register.css" />
+</head>
+
+<body>
+  <div class="register-shell">
+    <header class="register-titlebar">
+      <div class="title-left">
+        <span class="title-icon">♪</span>
+        <span>Jamming Studio</span>
+      </div>
+      <div class="title-buttons" aria-hidden="true">
+        <button type="button" aria-label="Minimize"></button>
+        <button type="button" aria-label="Restore"></button>
+        <button type="button" aria-label="Close"></button>
+      </div>
+    </header>
+
+    <section class="register-window">
+      <div class="window-toolbar">
+        <span>REGISTER</span>
+      </div>
+
+      <form id="register-form" class="register-form">
+        <div class="field-row">
+          <label for="user">Username</label>
+          <input id="user" name="user" type="text" placeholder="Masukkan username" autocomplete="username" required />
+        </div>
+
+        <div class="field-row">
+          <label for="email">Email</label>
+          <input id="email" name="email" type="email" placeholder="Masukkan email" autocomplete="email" required />
+        </div>
+
+        <div class="field-row">
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="Masukkan password" autocomplete="new-password" required />
+        </div>
+
+        <div class="field-row">
+          <label for="confirm-password">Konfirmasi Password</label>
+          <input id="confirm-password" name="confirm-password" type="password" placeholder="Konfirmasi password" autocomplete="new-password" required />
+        </div>
+
+        <button class="register-button" type="submit">Register</button>
+      </form>
+
+      <div class="register-note">Sudah punya akun? <a href="login.html">Login di sini</a>.</div>
+    </section>
+  </div>
+
+  <script>
+    document.getElementById('register-form').addEventListener('submit', function (event) {
+      event.preventDefault();
+      const password = document.getElementById('password').value;
+      const confirmPassword = document.getElementById('confirm-password').value;
+      if (password !== confirmPassword) {
+        alert('Password dan konfirmasi password tidak cocok.');
+        return;
+      }
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+
+</html>

@@ -33,14 +33,14 @@ body {
     linear-gradient(180deg, #4e79d1 0%, #1654a5 40%, #295ea8 100%);
 }
 
-.login-shell {
+.register-shell {
   width: min(460px, 100%);
   border: 2px solid var(--border-dark);
   background: var(--bg-panel);
   box-shadow: var(--shadow);
 }
 
-.login-titlebar {
+.register-titlebar {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -83,7 +83,7 @@ body {
   background: var(--panel);
 }
 
-.login-window {
+.register-window {
   background: var(--panel);
   padding: 18px 18px 20px;
 }
@@ -102,7 +102,7 @@ body {
   text-transform: uppercase;
 }
 
-.login-form {
+.register-form {
   display: grid;
   gap: 16px;
 }
@@ -131,7 +131,7 @@ input:focus {
   border-color: var(--accent);
 }
 
-.login-button {
+.register-button {
   width: 100%;
   padding: 10px 12px;
   border: 2px solid var(--border-dark);
@@ -142,32 +142,32 @@ input:focus {
   cursor: pointer;
 }
 
-.login-button:active {
+.register-button:active {
   transform: translateY(1px);
 }
 
-.login-note {
+.register-note {
   margin-top: 14px;
   font-size: 0.82rem;
   color: var(--muted);
 }
 
-.login-note a {
+.register-note a {
   color: var(--accent);
   text-decoration: underline;
   font-weight: 700;
 }
 
-.login-note a:hover {
+.register-note a:hover {
   color: var(--accent-light);
 }
 
 @media (max-width: 520px) {
-  .login-window {
+  .register-window {
     padding: 14px 14px 16px;
   }
 
-  .login-titlebar {
+  .register-titlebar {
     flex-wrap: wrap;
   }
 }

@@ -63,10 +63,18 @@
                         </div>
 
                         <div class="field-row">
+                            <label for="email">Email</label>
+                            <input id="email" name="email" type="email" placeholder="Masukkan email"
+                                autocomplete="email" required />
+                        </div>
+
+                        <div class="field-row">
                             <label for="password">Password</label>
                             <input id="password" name="password" type="password" placeholder="Buat password"
                                 autocomplete="new-password" required />
                         </div>
+
+                        <p id="register-message" class="form-message" role="alert" aria-live="polite"></p>
 
                         <button class="register-button" type="submit">Create Account</button>
                     </form>
@@ -79,9 +87,52 @@
     </div>
 
     <script>
-        document.getElementById('register-form').addEventListener('submit', function (event) {
+        const API_BASE = `${window.location.protocol}//${window.location.hostname}:3001`;
+        const form = document.getElementById('register-form');
+        const messageEl = document.getElementById('register-message');
+        const submitBtn = form.querySelector('button[type="submit"]');
+
+        function showMessage(text, type) {
+            messageEl.textContent = text;
+            messageEl.dataset.type = type;
+        }
+
+        form.addEventListener('submit', async function (event) {
             event.preventDefault();
-            window.location.href = 'login.html';
+            showMessage('', '');
+
+            const payload = {
+                display_name: document.getElementById('fullname').value.trim(),
+                username: document.getElementById('username').value.trim(),
+                email: document.getElementById('email').value.trim(),
+                password: document.getElementById('password').value,
+            };
+
+            submitBtn.disabled = true;
+            const originalLabel = submitBtn.textContent;
+            submitBtn.textContent = 'Mendaftarkan...';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload),
+                });
+                const data = await res.json().catch(() => ({}));
+
+                if (!res.ok) {
+                    showMessage(data.message || 'Register gagal', 'error');
+                    return;
+                }
+
+                showMessage('Register berhasil! Mengarahkan ke halaman login...', 'success');
+                setTimeout(() => { window.location.href = 'login.html'; }, 1200);
+            } catch (err) {
+                showMessage('Tidak bisa terhubung ke server. Pastikan server berjalan.', 'error');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalLabel;
+            }
         });
     </script>
 </body>

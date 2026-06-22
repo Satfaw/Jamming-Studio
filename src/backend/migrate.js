@@ -1,19 +1,27 @@
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
-import * as mariadb from "mariadb";   // ✅ ini yang bener untuk ESM
+import { fileURLToPath } from "node:url";
+import mysql from "mysql2/promise";
 import dotenv from "dotenv";
 
-dotenv.config();
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+// .env ada di folder yang sama (src/backend/.env)
+dotenv.config({ path: path.resolve(__dirname, ".env") });
+// folder schema: <repo>/database/schema
+const SCHEMA_DIR = path.resolve(__dirname, "../../database/schema");
 
-const SQL_FILE = process.env.SQL_FILE || "001_init.sql";
+// Daftar file yang dijalankan berurutan. Bisa dioverride lewat env SQL_FILE.
+const SQL_FILES = process.env.SQL_FILE
+  ? [process.env.SQL_FILE]
+  : ["001_init.sql", "002_indexes.sql"];
 
 function splitSqlStatements(sql) {
   const noBlockComments = sql.replace(/\/\*[\s\S]*?\*\//g, "");
   const noLineComments = noBlockComments.replace(/^\s*--.*$/gm, "");
   return noLineComments
     .split(";")
-    .map(s => s.trim())
+    .map((s) => s.trim())
     .filter(Boolean);
 }
 
@@ -23,30 +31,30 @@ async function main() {
   const user = process.env.DB_USER || "root";
   const password = process.env.DB_PASSWORD ?? "";
 
-  const sqlPath = path.resolve(process.cwd(), SQL_FILE);
-  if (!fs.existsSync(sqlPath)) {
-    console.error(`[migration] SQL file not found: ${sqlPath}`);
-    process.exit(1);
-  }
-
-  const sql = fs.readFileSync(sqlPath, "utf8");
-  const statements = splitSqlStatements(sql);
-
   let conn;
   try {
-    conn = await mariadb.createConnection({
+    conn = await mysql.createConnection({
       host,
       port,
       user,
       password,
-      multipleStatements: true
+      multipleStatements: true,
     });
 
     console.log(`[migration] Connected to ${host}:${port} as ${user}`);
-    console.log(`[migration] Running ${statements.length} statements from ${SQL_FILE}...`);
 
-    for (const stmt of statements) {
-      await conn.query(stmt);
+    for (const file of SQL_FILES) {
+      const sqlPath = path.resolve(SCHEMA_DIR, file);
+      if (!fs.existsSync(sqlPath)) {
+        console.warn(`[migration] Skip, file not found: ${sqlPath}`);
+        continue;
+      }
+      const sql = fs.readFileSync(sqlPath, "utf8");
+      const statements = splitSqlStatements(sql);
+      console.log(`[migration] Running ${statements.length} statements from ${file}...`);
+      for (const stmt of statements) {
+        await conn.query(stmt);
+      }
     }
 
     console.log("[migration] Done.");

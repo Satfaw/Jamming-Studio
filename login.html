@@ -59,6 +59,8 @@
               <input id="password" name="password" type="password" placeholder="Masukkan password" autocomplete="current-password" required />
             </div>
 
+            <p id="login-message" class="form-message" role="alert" aria-live="polite"></p>
+
             <button class="login-button" type="submit">Launch Studio</button>
           </form>
 
@@ -69,9 +71,52 @@
   </div>
 
   <script>
-    document.getElementById('login-form').addEventListener('submit', function (event) {
+    const API_BASE = `${window.location.protocol}//${window.location.hostname}:3001`;
+    const form = document.getElementById('login-form');
+    const messageEl = document.getElementById('login-message');
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    function showMessage(text, type) {
+      messageEl.textContent = text;
+      messageEl.dataset.type = type;
+    }
+
+    form.addEventListener('submit', async function (event) {
       event.preventDefault();
-      window.location.href = 'index.html';
+      showMessage('', '');
+
+      const payload = {
+        username: document.getElementById('user').value.trim(),
+        password: document.getElementById('password').value,
+      };
+
+      submitBtn.disabled = true;
+      const originalLabel = submitBtn.textContent;
+      submitBtn.textContent = 'Masuk...';
+
+      try {
+        const res = await fetch(`${API_BASE}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          showMessage(data.message || 'Login gagal', 'error');
+          return;
+        }
+
+        // simpan user yang login untuk dipakai halaman lain
+        localStorage.setItem('user', JSON.stringify(data.user));
+        showMessage('Login berhasil! Mengarahkan ke studio...', 'success');
+        setTimeout(() => { window.location.href = 'index.html'; }, 800);
+      } catch (err) {
+        showMessage('Tidak bisa terhubung ke server. Pastikan server berjalan.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
+      }
     });
   </script>
 </body>

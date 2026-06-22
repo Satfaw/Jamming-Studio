@@ -1,4 +1,8 @@
-CREATE INDEX idx_users_username ON users(username);
-CREATE INDEX idx_users_email ON users(email);
-CREATE INDEX idx_rooms_status ON rooms(status);
-CREATE INDEX idx_room_members_room ON room_members(room_id);
+USE jamming_studio;
+
+-- NOTE: kolom `username` dan `email` di tabel users sudah punya UNIQUE constraint,
+-- yang otomatis membuat index, jadi tidak perlu index tambahan di sini.
+--
+-- Index untuk tabel rooms / room_members akan ditambahkan ketika fitur room
+-- (src/api/room.js) benar-benar dipakai dan tabelnya dibuat. Dibiarkan kosong
+-- agar migrasi tidak gagal karena tabel belum ada.

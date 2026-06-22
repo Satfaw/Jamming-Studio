@@ -9,16 +9,25 @@
 </head>
 
 <body>
+  <div class="app-background" aria-hidden="true">
+    <div class="bg-orb orb-left"></div>
+    <div class="bg-orb orb-right"></div>
+    <div class="grid-overlay"></div>
+  </div>
+
   <div id="container" class="window-shell">
     <div class="window-titlebar">
       <div class="window-title-left">
-        <span class="window-app-icon" aria-hidden="true"></span>
-        <span>Jamming Studio</span>
+        <span class="window-app-icon" aria-hidden="true">♪</span>
+        <div class="window-title-copy">
+          <span>Jamming Studio</span>
+          <small>Modern Realtime Session Hub</small>
+        </div>
       </div>
+      <div class="window-chip">Online</div>
     </div>
-    <div class="window-menubar" aria-label="classic menu">
+    <div class="window-menubar" aria-label="navigation menu">
       <button id="menu-session" class="menu-btn" type="button">Session</button>
-      <button id="menu-user-setting" class="menu-btn is-disabled" type="button" disabled aria-disabled="true" title="Coming soon">User Setting</button>
     </div>
     <div class="window-content">
 
@@ -26,6 +35,7 @@
       <div id="step-browse" class="step-view active">
         <div class="lobby-intro">
           <div class="logo-icon">♪</div>
+          <p class="section-kicker">Realtime Music Network</p>
           <h1 class="lobby-title">Jamming Studio</h1>
           <p class="lobby-subtitle">Connect, collaborate, and create music together</p>
         </div>
@@ -45,6 +55,10 @@
 
       <!-- Step 2: Username Form (akan muncul setelah pilih sesion) -->
       <form id="form" class="username-form" style="display: none;">
+        <button id="back-to-menu" class="back-button" type="button" aria-label="Back to main menu">
+          <span class="back-arrow" aria-hidden="true">←</span>
+          <span>Back to Main Menu</span>
+        </button>
         <h2></h2>
         <div class="form-group">
           <label for="displayname">Your Name</label>
@@ -75,6 +89,7 @@
         </div>
       </div>
     </div>
+  </div>
 
 
   <script>
@@ -85,6 +100,7 @@
     const members = document.getElementById('members');
     const displayNameInput = document.getElementById('displayname');
     const menuSession = document.getElementById('menu-session');
+    const backToMenu = document.getElementById('back-to-menu');
     const statusObjects = document.getElementById('status-objects');
     const statusConnection = document.getElementById('status-connection');
     const leaveIcon = document.getElementById('leave-icon');
@@ -132,6 +148,11 @@
 
     menuSession.addEventListener('click', () => {
       if (roomHeader.style.display === 'flex') return;
+      showBrowseView();
+    });
+
+    backToMenu.addEventListener('click', () => {
+      displayNameInput.value = '';
       showBrowseView();
     });
 

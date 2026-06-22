@@ -9,46 +9,114 @@
 </head>
 
 <body>
-  <div class="login-shell">
-    <header class="login-titlebar">
-      <div class="title-left">
-        <span class="title-icon">♪</span>
-        <span>Jamming Studio</span>
-      </div>
-      <div class="title-buttons" aria-hidden="true">
-        <button type="button" aria-label="Minimize"></button>
-        <button type="button" aria-label="Restore"></button>
-        <button type="button" aria-label="Close"></button>
-      </div>
-    </header>
+  <div class="login-page">
+    <div class="bg-orb orb-left" aria-hidden="true"></div>
+    <div class="bg-orb orb-right" aria-hidden="true"></div>
+    <div class="grid-overlay" aria-hidden="true"></div>
 
-    <section class="login-window">
-      <div class="window-toolbar">
-        <span>LOGON</span>
-      </div>
+    <main class="login-shell">
+      <section class="login-intro">
+        <p class="eyebrow">Realtime Music Network</p>
+        <h1>Enter The Next Jam Session</h1>
+        <p class="intro-copy">
+          Masuk ke studio digital dengan tampilan neon, koneksi instan, dan vibe futuristic yang selaras dengan landing page.
+        </p>
 
-      <form id="login-form" class="login-form">
-        <div class="field-row">
-          <label for="user">Username</label>
-          <input id="user" name="user" type="text" placeholder="Masukkan username" autocomplete="username" required />
+        <div class="intro-pills" aria-label="platform highlights">
+          <span>Low Latency</span>
+          <span>Live Session</span>
+          <span>Global Musicians</span>
         </div>
+      </section>
 
-        <div class="field-row">
-          <label for="password">Password</label>
-          <input id="password" name="password" type="password" placeholder="Masukkan password" autocomplete="current-password" required />
+      <section class="login-panel">
+        <header class="login-titlebar">
+          <div class="title-left">
+            <span class="title-icon">♪</span>
+            <span>Jamming Studio</span>
+          </div>
+          <div class="title-buttons" aria-hidden="true">
+            <button type="button" aria-label="Minimize"></button>
+            <button type="button" aria-label="Restore"></button>
+            <button type="button" aria-label="Close"></button>
+          </div>
+        </header>
+
+        <div class="login-window">
+          <div class="window-toolbar">
+            <span>Jamming</span>
+            <span class="status-dot">Online</span>
+          </div>
+
+          <form id="login-form" class="login-form">
+            <div class="field-row">
+              <label for="user">Username</label>
+              <input id="user" name="user" type="text" placeholder="Masukkan username" autocomplete="username" required />
+            </div>
+
+            <div class="field-row">
+              <label for="password">Password</label>
+              <input id="password" name="password" type="password" placeholder="Masukkan password" autocomplete="current-password" required />
+            </div>
+
+            <p id="login-message" class="form-message" role="alert" aria-live="polite"></p>
+
+            <button class="login-button" type="submit">Launch Studio</button>
+          </form>
+
+          <div class="login-note">Belum login? Silahkan <a class="note-link" href="register.html">register</a> terlebih dahulu.</div>
         </div>
-
-        <button class="login-button" type="submit">Login</button>
-      </form>
-
-      <div class="login-note">Belum punya akun? <a href="register.html">Daftar di sini</a>.</div>
-    </section>
+      </section>
+    </main>
   </div>
 
   <script>
-    document.getElementById('login-form').addEventListener('submit', function (event) {
+    const API_BASE = `${window.location.protocol}//${window.location.hostname}:3001`;
+    const form = document.getElementById('login-form');
+    const messageEl = document.getElementById('login-message');
+    const submitBtn = form.querySelector('button[type="submit"]');
+
+    function showMessage(text, type) {
+      messageEl.textContent = text;
+      messageEl.dataset.type = type;
+    }
+
+    form.addEventListener('submit', async function (event) {
       event.preventDefault();
-      window.location.href = 'index.html';
+      showMessage('', '');
+
+      const payload = {
+        username: document.getElementById('user').value.trim(),
+        password: document.getElementById('password').value,
+      };
+
+      submitBtn.disabled = true;
+      const originalLabel = submitBtn.textContent;
+      submitBtn.textContent = 'Masuk...';
+
+      try {
+        const res = await fetch(`${API_BASE}/api/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+        const data = await res.json().catch(() => ({}));
+
+        if (!res.ok) {
+          showMessage(data.message || 'Login gagal', 'error');
+          return;
+        }
+
+        // simpan user yang login untuk dipakai halaman lain
+        localStorage.setItem('user', JSON.stringify(data.user));
+        showMessage('Login berhasil! Mengarahkan ke studio...', 'success');
+        setTimeout(() => { window.location.href = 'index.html'; }, 800);
+      } catch (err) {
+        showMessage('Tidak bisa terhubung ke server. Pastikan server berjalan.', 'error');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = originalLabel;
+      }
     });
   </script>
 </body>
